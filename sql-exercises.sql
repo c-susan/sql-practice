@@ -196,3 +196,73 @@ VALUES (
 	'jsalk@school.org',
 	'231-321-4321'
 );
+
+
+------------------------------
+--Conditional Expressions and Procedures
+------------------------------
+--Let's assign tiers/statuses to each customer based on their customer ids of either Premium, Plus, or Normal. 
+SELECT customer_id 
+CASE
+	WHEN (customer_id <= 100) THEN 'Premium'
+	WHEN (customer_id BETWEEN 100 AND 200) THEN 'Plus'
+	ELSE 'Normal'
+END AS customer_status
+FROM customer;
+
+--A raffle was held where results were the customer id 2 was the winner and customer id 5 was second place. 
+--Let's replicate the results below:
+SELECT customer_id, 
+CASE customer_id
+	WHEN 2 THEN 'Winner'
+	WHEN 5 THEN 'Second Place'
+	ELSE ''
+END AS raffle_results
+FROM customer;
+
+--We want to know and compare the various amounts of films we have per movie rating: 
+SELECT 
+SUM(CASE rating 
+	WHEN  = 'R'  THEN 1 ELSE 0 
+	END) AS r, 
+SUM(CASE rating 
+	WHEN  = 'PG'  THEN 1 ELSE 0 
+	END) AS pg, 
+SUM(CASE rating 
+	WHEN  = 'PG-13'  THEN 1 ELSE 0 
+	END) AS pg-13
+FROM film;
+
+
+--Here we are trying to find out how many digits are in the inventory id: 
+---CAST function changes one datatype to another. 
+SELECT CHAR_LENGTH(CAST(inventory_id AS VARCHAR)) 
+FROM rental;
+
+
+--Let's create a view consisting of customer first_name, last_name, and address:
+CREATE VIEW customer_info AS
+SELECT first_name,last_name,address
+FROM customer
+INNER JOIN address
+ON customer.address_id = address.address_id;
+---To call the view, simply: 
+SELECT * FROM customer_info;
+
+--We now want to change the view and and add in the district: 
+CREATE OR REPLACE VIEW customer_info AS
+SELECT first_name,last_name,address,district 
+FROM customer
+INNER JOIN address
+ON customer.address_id = address.address_id;
+---To call the view, simply: 
+SELECT * FROM customer_info;
+
+--To drop the view: 
+DROP VIEW customer_info;
+--OR:
+DROP VIEW IF EXISTS customer_info;
+
+--To rename the view: 
+ALTER VIEW customer_info RENAME TO c_info; 
+
